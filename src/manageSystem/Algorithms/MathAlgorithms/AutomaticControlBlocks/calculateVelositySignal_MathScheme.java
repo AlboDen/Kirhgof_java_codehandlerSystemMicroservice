@@ -17,7 +17,7 @@ public class calculateVelositySignal_MathScheme {
         //run async processes
         AlgorithmicSchemeElements.asyncRun();
 
-        double o5 = AlgorithmicSchemeElements.EdgeLinks.get(1).output -1;
+        double o5 = AlgorithmicSchemeElements.EdgeLinks.get(1).output;
     }
 
     public void createAperiodicBlocks(double timeMovement){
