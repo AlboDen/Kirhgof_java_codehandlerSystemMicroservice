@@ -32,7 +32,7 @@ public class Main {
 //            }
 //            System.out.println("END Print current massive");
            // System.out.println("PPP "+ comandsString[0]);
-
+            ArrayList<String> comandsString_BUFFER = new ArrayList<String>(comandsString.length);
             String buf_str;
             boolean thereAreAttachments = false;
             for(int i = 0; i < comandsString.length; i++){
