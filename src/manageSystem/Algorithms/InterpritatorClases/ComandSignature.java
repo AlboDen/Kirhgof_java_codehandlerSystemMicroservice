@@ -2,6 +2,9 @@ package manageSystem.Algorithms.InterpritatorClases;
 
 import java.util.ArrayList;
 
+/*
+*
+* */
 public class ComandSignature {
     ArrayList<String> comandsList = new ArrayList<String>();
 
@@ -19,57 +22,84 @@ public class ComandSignature {
     public void researchStringCode(String[] comandsString) {
         String buf_str;
         boolean thereAreAttachments = false;
-        for(int i = 0; i < (comandsString.length); i++){
+        for (int i = 0; i < (comandsString.length); i++) {
             buf_str = "";
-            System.out.println("o "+ i + "/" + comandsString.length +"  " + comandsString[i]);
+            System.out.println("o " + i + "/" + comandsString.length + "  " + comandsString[i]);
             printComandsList();
-            if (comandsString[i].indexOf("controls_ifelse") != -1){
+            if (comandsString[i].indexOf("controls_ifelse") != -1) {
 
                 addToArray(i, "IF_CONSTRUCT");
-                addToArray(i+1, "IF");
-                int openingCurlyBraceCounter = 1, closingCurlyBraceCounter = 0;
+                addToArray(i + 1, "IF");
+                int openingCurlyBraceCounter = 0, closingCurlyBraceCounter = 0;
                 int[] buf_int;
                 String[] buf_str_array = new String[3];
                 int p_buf = 0;
-                for(int p = 0 ; p < comandsString.length; p++){ // catch all text within curly braces
+                for (int p = 0; p < comandsString.length; p++) { // catch all text within curly braces
                     buf_int = this.countBraces(comandsString[i + p]);
                     openingCurlyBraceCounter += buf_int[0];
                     closingCurlyBraceCounter += buf_int[1];
-                    if (openingCurlyBraceCounter > closingCurlyBraceCounter){
+                    if (openingCurlyBraceCounter > closingCurlyBraceCounter) {
                         buf_str += comandsString[i + p];
-                    }
-                    else {
+                        System.out.println("in IF:   " + comandsString[i + p]);
+                    } else {
                         p_buf = p;
                         buf_str_array[0] = buf_str;
                         System.out.println("After IF:   " + buf_str);
                         break;
                     }
                 }
-                addToArray(i+2, buf_str);
-                addToArray(i+3, "IF_END");
-/*
-                addToArray(i+4, "DO");
+                addToArray(i + 2, buf_str);
+                addToArray(i + 3, "IF_END");
+                addToArray(i + 4, "DO");
                 buf_str = "";
-
-                while (comandsString[i + u].indexOf("DO") == -1) { // search string with "DO"
-                    u += 1;
+                System.out.println("SSSSSSSSS");
+                for (int p = 0; p < comandsString.length; p++) {
+                    System.out.println("     "+ p + "  " + comandsString[p]);
                 }
-                i += u;
-
+                System.out.println("EEEEEEEEEEE");
+                System.out.println( i);
+                System.out.println( p_buf);
+                this.printComandsList();
+                while (comandsString[i + p_buf].indexOf("DO0") == -1) { // search string with "DO"
+                    System.out.println("comandsString   " + comandsString.length+"/"+(i + p_buf));
+                    p_buf += 1;
+                }
                 openingCurlyBraceCounter = 1;
                 closingCurlyBraceCounter = 0;
-                for(int p = 0 ; p < comandsString.length; p++){ // catch all text within curly braces
+                for (int p = 0; p < comandsString.length; p++) { // catch all text within curly braces
                     buf_int = this.countBraces(comandsString[i + p]);
                     openingCurlyBraceCounter += buf_int[0];
                     closingCurlyBraceCounter += buf_int[1];
-                    if (openingCurlyBraceCounter > closingCurlyBraceCounter){
+                    if (openingCurlyBraceCounter > closingCurlyBraceCounter) {
                         buf_str += comandsString[i + p];
-                    }
-                    else {
-                        i += p;
+                        System.out.println("in DO:   " + comandsString[i + p]);
+                    } else {
+                        p_buf = p;
+                        buf_str_array[1] = buf_str;
+                        System.out.println("After DO:   " + buf_str);
                         break;
                     }
                 }
+
+                while (comandsString[i + p_buf].indexOf("ELSE") == -1) { // search string with "DO"
+                    p_buf += 1;
+                }
+                openingCurlyBraceCounter = 1;
+                closingCurlyBraceCounter = 0;
+                for (int p = p_buf; p < comandsString.length; p++) { // catch all text within curly braces
+                    buf_int = this.countBraces(comandsString[i + p]);
+                    openingCurlyBraceCounter += buf_int[0];
+                    closingCurlyBraceCounter += buf_int[1];
+                    if (openingCurlyBraceCounter > closingCurlyBraceCounter) {
+                        buf_str += comandsString[i + p];
+                    } else {
+                        p_buf = p;
+                        buf_str_array[2] = buf_str;
+                        System.out.println("After ELSE:   " + buf_str);
+                        break;
+                    }
+                }
+/*
                 //addToArray(i+4, buf_str);
                 addToArray(i+5, "DO_END");
 
@@ -91,44 +121,38 @@ public class ComandSignature {
 
                 i += u;
                 //*/
-            }
+                }
             else{
-                if (comandsString[i].indexOf("initialPosition") != -1){
-                    buf_str = "INIT_POSE " + comandsString[i].split("POSITION_NAME\":\"")[1].split("\"")[0].trim();
-                    addToArray(i, buf_str);
-                }
-                else {
-                    if (comandsString[i].indexOf("moveTo") != -1){
-                        buf_str = "PTP " + comandsString[i].split("POSITION_NAME\":\"")[1].split("\"")[0].trim();
+                    if (comandsString[i].indexOf("initialPosition") != -1) {
+                        buf_str = "INIT_POSE " + comandsString[i].split("POSITION_NAME\":\"")[1].split("\"")[0].trim();
                         addToArray(i, buf_str);
-                    }
-                    else {
-                        if (comandsString[i].indexOf("debug_activate_notification") != -1){
-                            buf_str = "MESSAGE " + comandsString[i].split("\"TEXT\":\"")[1].split("\"")[0];
+                    } else {
+                        if (comandsString[i].indexOf("moveTo") != -1) {
+                            buf_str = "PTP " + comandsString[i].split("POSITION_NAME\":\"")[1].split("\"")[0].trim();
                             addToArray(i, buf_str);
-                        }
-                        else {
-                            if (comandsString[i].indexOf("wait_seconds") != -1){
-                                buf_str = "WAIT_SEC " + comandsString[i].split("\"SECONDS\":")[1].split("\"")[0].split("}")[0];
+                        } else {
+                            if (comandsString[i].indexOf("debug_activate_notification") != -1) {
+                                buf_str = "MESSAGE " + comandsString[i].split("\"TEXT\":\"")[1].split("\"")[0];
                                 addToArray(i, buf_str);
-                            }
-                            else {
-                                if (comandsString[i].indexOf("getCurrentPosition") != -1){
-                                    buf_str = "GET_CURRENT_POSE " + comandsString[i].split("\"AXIS\":")[1].split("\"")[1];
+                            } else {
+                                if (comandsString[i].indexOf("wait_seconds") != -1) {
+                                    buf_str = "WAIT_SEC " + comandsString[i].split("\"SECONDS\":")[1].split("\"")[0].split("}")[0];
                                     addToArray(i, buf_str);
-                                }
-                                else {
-                                    if (comandsString[i].indexOf("math_number") != -1){
-                                        buf_str = "NUMBER " + comandsString[i].split("\"NUM\":")[1].split("}")[0];
+                                } else {
+                                    if (comandsString[i].indexOf("getCurrentPosition") != -1) {
+                                        buf_str = "GET_CURRENT_POSE " + comandsString[i].split("\"AXIS\":")[1].split("\"")[1];
                                         addToArray(i, buf_str);
-                                    }
-                                    else {
-                                        if (comandsString[i].indexOf("logic_compare") != -1){
-                                            buf_str = "LOGIC_OPERATION " + comandsString[i].split("\"OP\":\"")[1].split("\"")[0];
+                                    } else {
+                                        if (comandsString[i].indexOf("math_number") != -1) {
+                                            buf_str = "NUMBER " + comandsString[i].split("\"NUM\":")[1].split("}")[0];
                                             addToArray(i, buf_str);
-                                        }
-                                        else {
+                                        } else {
+                                            if (comandsString[i].indexOf("logic_compare") != -1) {
+                                                buf_str = "LOGIC_OPERATION " + comandsString[i].split("\"OP\":\"")[1].split("\"")[0];
+                                                addToArray(i, buf_str);
+                                            } else {
 
+                                            }
                                         }
                                     }
                                 }
@@ -137,26 +161,27 @@ public class ComandSignature {
                     }
                 }
             }
-        }
 
-        if(thereAreAttachments){
+            if (thereAreAttachments) {
 //            comandsList.add("");
 //            comandsList.add("ITERATION");
 //            comandsList.add("");
 
-            String[] dblArray = new String[comandsList.size()];
-            dblArray = comandsList.toArray(dblArray);
-            researchStringCode(dblArray);
-            thereAreAttachments = false;
+                String[] dblArray = new String[comandsList.size()];
+                dblArray = comandsList.toArray(dblArray);
+                researchStringCode(dblArray);
+                thereAreAttachments = false;
+            }
         }
-    }
+
 
     private void addToArray(int i, String k){
         try {
-            comandsList.remove(i);
+            //comandsList.remove(i);
             comandsList.add(i, k);
         }
         catch (IndexOutOfBoundsException e){
+            System.out.println("EXCEPTOIN");
             comandsList.add(k);
         }
     }
