@@ -21,13 +21,7 @@ public class ProgramManager {
         }
     }
 
-    private void codeFromSQLtoString(){
-        String code; // fill from sql
-        //pass:
 
-
-        System.out.printf("Code splited\n" +code.split("block"));
-    }
 
     //Async
     public static void runProgram(String prog){ //calling async reader of code program strings
